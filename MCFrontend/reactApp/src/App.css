@@ -1,0 +1,91 @@
+/* Global light and dark mode styles */
+.app {
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-mode {
+  background-color: #c4b9b9;
+  color: #000000;
+}
+
+.dark-mode {
+  background-color: #000000;
+  color: #000000;
+}
+
+/* Main content styles */
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 60px);
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.sidebar.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.sidebar.dark {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Topbar styles */
+.topbar {
+  width: 100%;
+  height: 60px;
+  background-color: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.topbar.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.topbar.dark {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Search bar styles */
+.search-bar {
+  width: 300px;
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+.search-bar.light {
+  background-color: #f0f0f0;
+  color: #000000;
+}
+
+.search-bar.dark {
+  background-color: #555555;
+  color: #ffffff;
+}
