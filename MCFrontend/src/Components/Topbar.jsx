@@ -1,6 +1,4 @@
-
-
-import { IconButton, Switch } from "@mui/material";
+import { IconButton, Switch, Menu, MenuItem } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -9,10 +7,22 @@ import { useState } from "react";
 
 const Topbar = ({ darkMode, toggleDarkMode }) => {
   const [searchText, setSearchText] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Handle dropdown toggle
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleClearSearch = () => {
     setSearchText("");
   };
+
+  const isMenuOpen = Boolean(anchorEl);
 
   return (
     <div
@@ -65,7 +75,7 @@ const Topbar = ({ darkMode, toggleDarkMode }) => {
         {/* Dark Mode Toggle */}
         <Switch checked={darkMode} onChange={toggleDarkMode} />
         {/* Account and Settings Icons */}
-        <IconButton>
+        <IconButton onClick={handleProfileMenuOpen}>
           <AccountCircleIcon
             className={darkMode ? "text-white" : "text-gray-700"}
           />
@@ -74,6 +84,25 @@ const Topbar = ({ darkMode, toggleDarkMode }) => {
           <SettingsIcon className={darkMode ? "text-white" : "text-gray-700"} />
         </IconButton>
       </div>
+
+      {/* Profile Dropdown Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      </Menu>
     </div>
   );
 };
