@@ -6,7 +6,14 @@ import Sidebar from "./Components/Sidebar";
 import "./App.css"; 
 import Home from "./Pages/Home";
 import MasterData from "./Pages/MasterData";
-import Machines from "./Pages/Machines";
+import Machine from './Pages/Machine';
+import MachineType from './Pages/MachineType';
+import MainSection from './Pages/MainSection';
+import Parameter from './Pages/Parameter';
+import ParameterQualifiedValue from './Pages/ParameterQualifiedValue';
+import SectionTemplate from './Pages/SectionTemplate';
+import SubSection from './Pages/SubSection';
+import Tolerance from './Pages/Tolerance';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false); // Dark mode state
@@ -30,7 +37,16 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/masterData" element={<MasterData />} />
-          <Route path="/machines" element={<Machines />} />
+          <Route path="/machine" element={<Machine />} />
+          <Route path="/machine-type" element={<MachineType />} />
+          <Route path="/main-section" element={<MainSection />} />
+          <Route path="/parameter" element={<Parameter />} />
+          <Route path="/parameter-qualified-value" element={<ParameterQualifiedValue />} />
+          <Route path="/section-template" element={<SectionTemplate />} />
+          <Route path="/sub-section" element={<SubSection />} />
+          <Route path="/tolerance" element={<Tolerance />} />
+          <Route path="/parameter-qualified-value" component={ParameterQualifiedValue} />
+
         </Routes>
 
       </div>
