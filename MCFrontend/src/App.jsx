@@ -14,28 +14,24 @@ import ParameterQualifiedValue from './Pages/ParameterQualifiedValue';
 import SectionTemplate from './Pages/SectionTemplate';
 import SubSection from './Pages/SubSection';
 import Tolerance from './Pages/Tolerance';
+import UserManage from "./Pages/Usermanage";
 
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false); // Dark mode state
-
-  // Function to toggle between dark and light modes
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
+  
   return (
-    <div className={`app ${darkMode ? "dark-mode" : "light-mode"}`}>
+    <div className>
       {/* Main content wrapper */}
       <div className="main-content">
-        {/* Topbar component with dark mode toggling functionality */}
-        <Topbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        {/* Topbar component */}
+        <Topbar  />
 
         {/* Sidebar component */}
-        <Sidebar darkMode={darkMode} />
+        <Sidebar  />
         {/* <CalendarComponent/> */}
         {/* Routes for navigating between different pages */}
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/usermanage" element={<UserManage/>}/>
           <Route path="/masterData" element={<MasterData />} />
           <Route path="/machine" element={<Machine />} />
           <Route path="/machine-type" element={<MachineType />} />
