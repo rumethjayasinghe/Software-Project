@@ -51,32 +51,32 @@ const UserManage = () => {
     return (
         <div className="grid grid-cols-2 gap-8 min-h-screen bg-gray-100 pt-16 px-4">
             {/* User Management Section */}
-            <div className="p-6 bg-white rounded-lg shadow-md flex flex-col">
-                <div className="flex items-center gap-6 mb-6">
+            <div className="p-4 bg-white rounded-lg shadow-md flex flex-col w-80">
+                <div className="flex items-center gap-4 mb-4">
                     {/* Profile Picture */}
                     <img
                         src={userData.profilePicture}
                         alt="User Profile"
-                        className="w-24 h-24 rounded-full object-cover"
+                        className="w-16 h-16 rounded-full object-cover"
                     />
                     {/* User Info */}
-                    <div>
-                        <h3 className="text-xl font-semibold">{userData.username}</h3>
+                    <div className="text-sm">
+                        <h3 className="text-lg font-semibold">{userData.username}</h3>
                         <p className="text-gray-500">{userData.email}</p>
                         <p className="text-gray-500">{userData.telephone}</p>
                         <p className="text-gray-500">{userData.role}</p>
                     </div>
                 </div>
                 {/* File Input for Profile Picture Upload */}
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-xs font-bold mb-2">
                         Upload Profile Picture:
                     </label>
                     <input
                         type="file"
                         accept="image/*"
                         onChange={handleProfilePictureChange}
-                        className="border rounded w-full py-2 px-3 text-gray-700"
+                        className="border rounded w-full py-1 px-2 text-gray-700"
                     />
                 </div>
             </div>

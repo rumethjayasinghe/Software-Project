@@ -25,11 +25,23 @@ const Sidebar = () => {
     setMasterDataOpen(!masterDataOpen);
   };
 
+  // Generate initials from the user's name
+  const generateInitials = (name) => {
+    const nameParts = name.split(" ");
+    const initials = nameParts.map(part => part[0]).join("").toUpperCase();
+    return initials.length > 2 ? initials.slice(0, 2) : initials;
+  };
+
   return (
     <div className="sidebar fixed top-12 w-64 h-[calc(100vh-3rem)] bg-slate-200 text-black flex flex-col"> {/* Adjust top for Topbar overlap */}
       {/* User Info Section */}
       <div className="p-6 flex items-center space-x-4">
-        <AccountCircleIcon className="h-12 w-12 text-gray-500" />
+        {/* Profile Icon with Initials */}
+        <div
+          className="h-12 w-12 flex items-center justify-center rounded-full bg-gray-700 text-white text-lg font-bold"
+        >
+          {generateInitials(user.name || "User Name")}
+        </div>
         <div>
           {/* Display User Name and Email */}
           <p className="font-semibold text-lg">{user.name || "User Name"}</p>
