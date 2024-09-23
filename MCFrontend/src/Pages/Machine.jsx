@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
+import MachineTable from "../Components/MachineTable";
+
 const Machine = () => {
   return (
     <div>
-      <h1>Machine Page</h1>
-      {/* Content for the Machine page */}
+      <h1>Machine Data</h1>
+      <MachineTable />
     </div>
   );
 };

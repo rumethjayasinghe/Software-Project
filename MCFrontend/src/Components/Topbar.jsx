@@ -1,11 +1,22 @@
+import React, { useState } from "react";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
-  // Handle dropdown toggle
+  // Sample user data
+  const user = {
+    name: 'John Doe',
+    address: '123 Main St, Anytown',
+    telephone: '+1 234 567 890',
+    username: 'johndoe',
+    email: 'john.doe@example.com',
+    role: 'Admin',
+  };
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -14,18 +25,26 @@ const Topbar = () => {
     setAnchorEl(null);
   };
 
+  const handleProfileClick = () => {
+    navigate('/Usermanage'); 
+    handleMenuClose();
+  };
+
+  const handleLogoutClick = () => {
+    // Perform logout logic here (e.g., clearing tokens)
+    navigate('/login'); // Redirect to login page
+  };
+
   const isMenuOpen = Boolean(anchorEl);
 
   return (
-    <div
-      className="topbar absolute left-0 top-0 w-full flex justify-between items-center p-2 h-12 bg-slate-200 text-black shadow-md z-50" // Positioning, full width, and z-index to overlap Sidebar
-    >
+    <div className="topbar absolute left-0 top-0 w-full flex justify-between items-center p-2 h-12 bg-slate-200 text-black shadow-md z-50">
       {/* Left - Logo */}
       <div className="topbar-left">
         <img
           src="src/assets/Logo.png"
           alt="Logo"
-          className="h-8" // Adjusted logo height
+          className="h-8"
         />
       </div>
 
@@ -39,7 +58,7 @@ const Topbar = () => {
       {/* Profile Dropdown Menu */}
       <Menu
         anchorEl={anchorEl}
-        open={isMenuOpen}
+        open={Boolean(anchorEl)}
         onClose={handleMenuClose}
         anchorOrigin={{
           vertical: "top",
@@ -50,9 +69,8 @@ const Topbar = () => {
           horizontal: "right",
         }}
       >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
       </Menu>
     </div>
   );

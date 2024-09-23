@@ -1,10 +1,12 @@
 
 /* Main content styles */
 .main-content {
-  margin-left: 245px;
+  margin-left: 250px; 
+  padding-top: 60px; 
   overflow-y: auto;
+  height: calc(100vh - 60px); 
+  padding-right: 20px; 
 }
-
 /* Sidebar styles */
 .sidebar {
   position: fixed;
@@ -33,3 +35,8 @@
   color: #000000;
 }
 
+.table-container {
+  width: calc(100% - 250px); 
+  padding: 20px; /* Padding inside the table container */
+  margin-left: 50px; /* No extra left margin needed */
+}
