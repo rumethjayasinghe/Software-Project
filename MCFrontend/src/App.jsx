@@ -13,8 +13,11 @@ import SectionTemplate from './Pages/SectionTemplate';
 import SubSection from './Pages/SubSection';
 import Tolerance from './Pages/Tolerance';
 import UserManage from "./Pages/Usermanage";
-import Login from "./pages/Login";
-import Admin from "./pages/Admin";
+import Login from "./Pages/Login";
+import Admin from "./Pages/Admin";
+import AdminLogin from "./Pages/AdminLogin";
+
+
 
 const App = () => {
   // Get the current route
@@ -26,7 +29,7 @@ const App = () => {
   return (
     <div className="app-wrapper">
       {/* Only render Topbar and Sidebar if the user is not on the login page */}
-      {!isLoginPage && <Topbar />}
+      <Topbar show={!isLoginPage} />
       {!isLoginPage && <Sidebar />}
       
       {/* Main content wrapper */}
@@ -35,6 +38,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/usermanage" element={<UserManage />} />
           <Route path="/masterData" element={<MasterData />} />

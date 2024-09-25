@@ -3,7 +3,15 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Table
 
 const MachineTable = () => {
   const [machines, setMachines] = useState([]); // State to store machine data
-  const [newMachine, setNewMachine] = useState({ id: "", machineType: "", isActive: false }); // State for new machine input
+  const [newMachine, setNewMachine] = useState({
+    machineCode: "",
+    machineType: "",
+    sapResource: "",
+    hasDeleted: false,
+    createdTime: "",
+    modifiedTime: "",
+    plannedEpld: ""
+  }); // State for new machine input
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -11,16 +19,45 @@ const MachineTable = () => {
   useEffect(() => {
     // Replace with actual data fetching
     const initialData = [
-      { id: '1', machineType: 'Type A', isActive: true },
-      { id: '2', machineType: 'Type B', isActive: false },
+      {
+        machineCode: 'PMP-PU',
+        machineType: 'KNT',
+        sapResource: 'NULL',
+        hasDeleted: false,
+        createdTime: new Date().toISOString(),
+        modifiedTime: new Date().toISOString(),
+        plannedEpld: '24'
+      },
+      {
+        machineCode: 'PMP1-PU',
+        machineType: 'KNT',
+        sapResource: 'NULL',
+        hasDeleted: false,
+        createdTime: new Date().toISOString(),
+        modifiedTime: new Date().toISOString(),
+        plannedEpld: '24'
+      },
     ];
     setMachines(initialData);
   }, []);
 
   // Handle adding a new machine
   const handleAddMachine = () => {
-    setMachines([...machines, newMachine]);
-    setNewMachine({ id: "", machineType: "", isActive: false });
+    const newMachineData = {
+      ...newMachine,
+      createdTime: new Date().toISOString(), // Set created time
+      modifiedTime: new Date().toISOString() // Set modified time
+    };
+    setMachines([...machines, newMachineData]);
+    setNewMachine({
+      machineCode: "",
+      machineType: "",
+      sapResource: "",
+      hasDeleted: false,
+      createdTime: "",
+      modifiedTime: "",
+      plannedEpld: ""
+    });
   };
 
   // Handle page change
@@ -39,10 +76,10 @@ const MachineTable = () => {
       {/* Form for adding new machines */}
       <div className="mb-4">
         <TextField
-          label="Machine ID"
+          label="Machine Code"
           variant="outlined"
-          value={newMachine.id}
-          onChange={(e) => setNewMachine({ ...newMachine, id: e.target.value })}
+          value={newMachine.machineCode}
+          onChange={(e) => setNewMachine({ ...newMachine, machineCode: e.target.value })}
           className="mr-2"
         />
         <TextField
@@ -53,10 +90,24 @@ const MachineTable = () => {
           className="mr-2"
         />
         <TextField
-          label="Active"
+          label="SAP Resource"
+          variant="outlined"
+          value={newMachine.sapResource}
+          onChange={(e) => setNewMachine({ ...newMachine, sapResource: e.target.value })}
+          className="mr-2"
+        />
+        <TextField
+          label="Has Deleted"
           type="checkbox"
-          checked={newMachine.isActive}
-          onChange={(e) => setNewMachine({ ...newMachine, isActive: e.target.checked })}
+          checked={newMachine.hasDeleted}
+          onChange={(e) => setNewMachine({ ...newMachine, hasDeleted: e.target.checked })}
+          className="mr-2"
+        />
+        <TextField
+          label="Planned Epld"
+          variant="outlined"
+          value={newMachine.plannedEpld}
+          onChange={(e) => setNewMachine({ ...newMachine, plannedEpld: e.target.value })}
           className="mr-2"
         />
         <Button variant="contained" color="primary" onClick={handleAddMachine}>
@@ -69,17 +120,25 @@ const MachineTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>Machine Code</TableCell>
               <TableCell>Machine Type</TableCell>
-              <TableCell>Active</TableCell>
+              <TableCell>SAP Resource</TableCell>
+              <TableCell>Has Deleted</TableCell>
+              <TableCell>Created Time</TableCell>
+              <TableCell>Modified Time</TableCell>
+              <TableCell>Planned Epld</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {machines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((machine, index) => (
               <TableRow key={index}>
-                <TableCell>{machine.id}</TableCell>
+                <TableCell>{machine.machineCode}</TableCell>
                 <TableCell>{machine.machineType}</TableCell>
-                <TableCell>{machine.isActive ? "Yes" : "No"}</TableCell>
+                <TableCell>{machine.sapResource}</TableCell>
+                <TableCell>{machine.hasDeleted ? "Yes" : "No"}</TableCell>
+                <TableCell>{machine.createdTime}</TableCell>
+                <TableCell>{machine.modifiedTime}</TableCell>
+                <TableCell>{machine.plannedEpld}</TableCell>
               </TableRow>
             ))}
           </TableBody>

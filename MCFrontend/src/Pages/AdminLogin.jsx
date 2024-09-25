@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -17,9 +17,9 @@ const Login = () => {
     // Simulate an API call with hardcoded credentials
     setTimeout(() => {
       setLoading(false);
-      if (email === "test@example.com" && password === "password123") {
+      if (email === "admin@example.com" && password === "password123") {
         alert("Login Successful!");
-        navigate("/home");
+        navigate("/admin");
       } else {
         setError("Invalid email or password. Please try again.");
       }
@@ -55,7 +55,7 @@ const Login = () => {
             <div className="bg-white rounded p-4 p-sm-5 my-4 mx-3">
               <div className="d-flex align-items-center justify-content-center mb-3">
                 <h3 className="text-danger fw-bold">Promco 2.0</h3>
-                <h3 className="text-dark fw-normal ms-2">Login</h3>
+                <h3 className="text-dark fw-normal ms-2">Admin Login</h3>
               </div>
               <form onSubmit={handleLogin}>
                 <div className="form-floating mb-3">
@@ -102,12 +102,6 @@ const Login = () => {
                   {loading ? "Loading..." : "Login"}
                 </button>
               </form>
-              <p className="text-center mb-0 text-dark">
-                Don't have an Account?{" "}
-                <a href="/adminlogin" className="text-danger">
-                  Admin
-                </a>
-              </p>
             </div>
           </div>
         </div>
@@ -117,4 +111,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;

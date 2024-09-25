@@ -3,7 +3,7 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 
-const Topbar = () => {
+const Topbar = ({ show }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
@@ -36,6 +36,9 @@ const Topbar = () => {
   };
 
   const isMenuOpen = Boolean(anchorEl);
+
+  // Render null if show is false
+  if (!show) return null;
 
   return (
     <div className="topbar fixed left-0 top-0 w-full flex justify-between items-center p-2 h-12 bg-slate-200 text-black shadow-md z-50">
