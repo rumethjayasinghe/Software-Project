@@ -53,9 +53,9 @@ const Login = () => {
         >
           <div className="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
             <div className="bg-white rounded p-4 p-sm-5 my-4 mx-3">
-              <div className="d-flex align-items-center justify-content-center mb-3">
-                <h3 className="text-danger fw-bold">Promco 2.0</h3>
-                <h3 className="text-dark fw-normal ms-2">Login</h3>
+              <div className="d-flex flex-column align-items-center mb-3">
+                <h3 className="text-danger fw-bold fs-1">Promco 2.0</h3>
+                <h3 className="text-dark fw-normal fs-3 mt-2">Login</h3>
               </div>
               <form onSubmit={handleLogin}>
                 <div className="form-floating mb-3">
@@ -68,7 +68,10 @@ const Login = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                  <label htmlFor="floatingInput" className="text-light">
+                  <label
+                    htmlFor="floatingInput"
+                    className="text-primary" // Custom color for the label
+                  >
                     Email address
                   </label>
                 </div>
@@ -82,7 +85,10 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <label htmlFor="floatingPassword" className="text-light">
+                  <label
+                    htmlFor="floatingPassword"
+                    className="text-primary" // Custom color for the label
+                  >
                     Password
                   </label>
                 </div>
