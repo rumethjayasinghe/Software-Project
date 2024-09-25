@@ -17,23 +17,26 @@ import Login from "./Pages/Login";
 import Admin from "./Pages/Admin";
 import AdminLogin from "./Pages/AdminLogin";
 
-
-
 const App = () => {
   // Get the current route
   const location = useLocation();
 
-  // Check if the user is on the login page
+  // Check if the user is on the login, admin login, or admin page
   const isLoginPage = location.pathname === "/";
+  const isAdminLoginPage = location.pathname === "/adminlogin"; 
+  const isAdminPage = location.pathname === "/admin";
+
+  // Combined condition to hide Topbar for login, admin login, and admin pages
+  const showTopbar = !(isLoginPage || isAdminLoginPage || isAdminPage);
 
   return (
     <div className="app-wrapper">
-      {/* Only render Topbar and Sidebar if the user is not on the login page */}
-      <Topbar show={!isLoginPage} />
-      {!isLoginPage && <Sidebar />}
+      {/* Only render Topbar and Sidebar if the user is not on the login, admin login, or admin page */}
+      <Topbar show={showTopbar} />
+      {showTopbar && <Sidebar />}
       
       {/* Main content wrapper */}
-      <div className={`main-content ${isLoginPage ? "login-page" : ""}`}>
+      <div className={`main-content ${isLoginPage || isAdminLoginPage || isAdminPage ? "login-page" : ""}`}>
         {/* Routes for navigating between different pages */}
         <Routes>
           <Route path="/" element={<Login />} />
