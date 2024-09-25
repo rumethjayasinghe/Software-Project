@@ -26,19 +26,19 @@ const Topbar = () => {
   };
 
   const handleProfileClick = () => {
-    navigate('/Usermanage'); 
+    navigate('/Usermanage');
     handleMenuClose();
   };
 
   const handleLogoutClick = () => {
     // Perform logout logic here (e.g., clearing tokens)
-    navigate('/login'); // Redirect to login page
+    navigate('/'); // Redirect to login page
   };
 
   const isMenuOpen = Boolean(anchorEl);
 
   return (
-    <div className="topbar absolute left-0 top-0 w-full flex justify-between items-center p-2 h-12 bg-slate-200 text-black shadow-md z-50">
+    <div className="topbar fixed left-0 top-0 w-full flex justify-between items-center p-2 h-12 bg-slate-200 text-black shadow-md z-50">
       {/* Left - Logo */}
       <div className="topbar-left">
         <img
