@@ -14,8 +14,8 @@ import SubSection from './Pages/SubSection';
 import Tolerance from './Pages/Tolerance';
 import UserManage from "./Pages/Usermanage";
 import Login from "./Pages/Login";
-import Admin from "./Pages/Admin";
-import AdminLogin from "./Pages/AdminLogin";
+import AdminLogin from "./Pages/AdminDash";
+import AdminDash from "./Pages/AdminDash";
 
 const App = () => {
   // Get the current route
@@ -23,11 +23,10 @@ const App = () => {
 
   // Check if the user is on the login, admin login, or admin page
   const isLoginPage = location.pathname === "/";
-  const isAdminLoginPage = location.pathname === "/adminlogin"; 
-  const isAdminPage = location.pathname === "/admin";
+  const isAdminDashPage = location.pathname === "/admindash"; 
 
   // Combined condition to hide Topbar for login, admin login, and admin pages
-  const showTopbar = !(isLoginPage || isAdminLoginPage || isAdminPage);
+  const showTopbar = !(isLoginPage || isAdminDashPage);
 
   return (
     <div className="app-wrapper">
@@ -36,13 +35,12 @@ const App = () => {
       {showTopbar && <Sidebar />}
       
       {/* Main content wrapper */}
-      <div className={`main-content ${isLoginPage || isAdminLoginPage || isAdminPage ? "login-page" : ""}`}>
+      <div className={`main-content ${isLoginPage || isAdminDashPage ? "login-page" : ""}`}>
         {/* Routes for navigating between different pages */}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/adminlogin" element={<AdminLogin />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admindash" element={<AdminDash />} />
           <Route path="/usermanage" element={<UserManage />} />
           <Route path="/masterData" element={<MasterData />} />
           <Route path="/machine" element={<Machine />} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './Admin.css'; // Include the updated CSS
+import './AdminDash.css'; // Include the updated CSS
 
-function Admin() {
+function AdminDash() {
   const [userData, setUserData] = useState({
     username: '',
     password: ''
@@ -66,4 +66,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default AdminDash;
