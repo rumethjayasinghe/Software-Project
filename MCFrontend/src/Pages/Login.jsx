@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -8,6 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -68,16 +70,14 @@ const Login = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                  <label
-                    htmlFor="floatingInput"
-                    className="text-primary" // Custom color for the label
-                  >
+                  <label htmlFor="floatingInput" className="text-primary">
                     Email address
                   </label>
                 </div>
-                <div className="form-floating mb-4">
+
+                <div className="form-floating mb-4 position-relative">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"} // Toggle between text and password
                     className="form-control bg-dark text-light"
                     id="floatingPassword"
                     placeholder="Password"
@@ -85,12 +85,16 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <label
-                    htmlFor="floatingPassword"
-                    className="text-primary" // Custom color for the label
-                  >
+                  <label htmlFor="floatingPassword" className="text-primary">
                     Password
                   </label>
+                  <span
+                    className="position-absolute end-0 top-50 translate-middle-y me-3"
+                    style={{ cursor: "pointer", color: "white" }} // White color for the icon
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+                  </span>
                 </div>
 
                 {error && (
