@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: black; /* Background color for the page */
+    color: white; /* Default text color */
+}
+
+h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none; /* Remove underlines from links */
+    color: inherit; /* Inherit color from parent */
+}
