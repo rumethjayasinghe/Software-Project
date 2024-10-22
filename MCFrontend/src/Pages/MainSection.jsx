@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '../Components/Sidebar'; // Import Sidebar
 import Topbar from '../Components/Topbar'; // Import Topbar
-import MainSectionTable from '../Components/MainSectionTable';
+import MainSectionTable from '../Components/MainSectionTable'; // Import the MainSectionTable component
 
 const MainSection = () => {
     return (
@@ -14,10 +14,18 @@ const MainSection = () => {
                 <Topbar />
 
                 {/* Main Content */}
-                <div className="home-content p-6" style={{ paddingTop: '3rem', paddingLeft: '16rem' }}>
-                  
-                        <MainSectionTable />
-                    
+                <div 
+                    className="main-content p-6" 
+                    style={{ 
+                        marginTop: '5rem',  // Spacing below the top bar
+                        marginLeft: '16rem' // Spacing to the right of the sidebar (assuming sidebar is 16rem wide)
+                    }}
+                >
+                    {/* Page Title */}
+                    <h1 className="text-2xl font-bold mb-4">Main Section Page</h1> {/* Header to show the current page */}
+
+                    {/* Main Section Table */}
+                    <MainSectionTable />
                 </div>
             </div>
         </div>

@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+const userDatabase = {
+  "test@example.com": { name: "Rashmi Rathnayaka", email: "test@example.com" },
+  "admin@example.com": { name: "Admin User", email: "admin@example.com" },
+  // Add more users as needed
+};
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -9,7 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -20,19 +26,15 @@ const Login = () => {
     setTimeout(() => {
       setLoading(false);
 
-      // Admin login credentials
-      const adminEmail = "admin@example.com";
-      const adminPassword = "adminpass";
+      const user = userDatabase[email];
 
-      // User login credentials (example)
-      const userEmail = "test@example.com";
-      const userPassword = "password123";
+      // Here you can implement your actual password checking logic
+      const validPassword = (email === "admin@example.com" && password === "adminpass") ||
+                            (email === "test@example.com" && password === "password123");
 
-      if (email === adminEmail && password === adminPassword) {
-        alert("Admin Login Successful!");
-        navigate("/admindash"); // Redirect to admin dashboard
-      } else if (email === userEmail && password === userPassword) {
-        alert("User Login Successful!");
+      if (user && validPassword) {
+        localStorage.setItem("user", JSON.stringify(user)); // Store user data in local storage
+        alert(`${user.name} Login Successful!`);
         navigate("/home"); // Redirect to home page for users
       } else {
         setError("Invalid email or password. Please try again.");
@@ -42,30 +44,19 @@ const Login = () => {
 
   const handleAdminClick = (e) => {
     e.preventDefault();
-    alert("Please contact the admin to create a new account."); // Show alert message
-    window.location.href = "mailto:admin@example.com?subject=Request%20for%20New%20Account"; // Open default mail client with subject
+    alert("Please contact the admin to create a new account.");
+    window.location.href = "mailto:admin@example.com?subject=Request%20for%20New%20Account";
   };
 
   return (
     <div className="container-fluid position-relative d-flex p-0" style={{ height: "100vh" }}>
-      {/* Spinner Start */}
       {loading && (
-        <div
-          id="spinner"
-          className="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
-        >
-          <div
-            className="spinner-border text-primary"
-            style={{ width: "3rem", height: "3rem" }}
-            role="status"
-          >
+        <div id="spinner" className="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+          <div className="spinner-border text-primary" style={{ width: "3rem", height: "3rem" }} role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       )}
-      {/* Spinner End */}
-
-      {/* Login Start */}
       <div className="container-fluid bg-dark d-flex justify-content-center align-items-center">
         <div className="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
           <div className="bg-white rounded p-4 p-sm-5 my-4 mx-3">
@@ -84,14 +75,12 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <label htmlFor="floatingInput" className="text-primary">
-                  Email address
-                </label>
+                <label htmlFor="floatingInput" className="text-primary">Email address</label>
               </div>
 
               <div className="form-floating mb-4 position-relative">
                 <input
-                  type={showPassword ? "text" : "password"} // Toggle between text and password
+                  type={showPassword ? "text" : "password"}
                   className="form-control bg-dark text-light"
                   id="floatingPassword"
                   placeholder="Password"
@@ -99,43 +88,26 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <label htmlFor="floatingPassword" className="text-primary">
-                  Password
-                </label>
+                <label htmlFor="floatingPassword" className="text-primary">Password</label>
                 <span
                   className="position-absolute end-0 top-50 translate-middle-y me-3"
-                  style={{ cursor: "pointer", color: "white" }} // White color for the icon
+                  style={{ cursor: "pointer", color: "white" }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               </div>
 
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
-                </div>
-              )}
+              {error && <div className="alert alert-danger" role="alert">{error}</div>}
 
-              <button
-                type="submit"
-                className="btn btn-dark py-3 w-100 mb-4"
-                style={{ color: "white" }}
-                disabled={loading}
-              >
+              <button type="submit" className="btn btn-dark py-3 w-100 mb-4" style={{ color: "white" }} disabled={loading}>
                 {loading ? "Loading..." : "Login"}
               </button>
             </form>
-            <p className="text-center mb-0 text-dark">
-              Don't have an Account?{" "}
-              <a href="" className="text-danger" onClick={handleAdminClick}>
-                Admin
-              </a>
-            </p>
+           
           </div>
         </div>
       </div>
-      {/* Login End */}
     </div>
   );
 };

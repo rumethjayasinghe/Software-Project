@@ -8,7 +8,7 @@ const MachineTable = () => {
     machineType: "",
     sapResource: "",
     hasDeleted: false,
-    createdTime: "",
+    createdTime: "", 
     modifiedTime: "",
     plannedEpld: ""
   }); // State for new machine input
@@ -98,7 +98,7 @@ const MachineTable = () => {
         />
         <TextField
           label="Has Deleted"
-          type="checkbox"
+          type="checkbox" 
           checked={newMachine.hasDeleted}
           onChange={(e) => setNewMachine({ ...newMachine, hasDeleted: e.target.checked })}
           className="mr-2"

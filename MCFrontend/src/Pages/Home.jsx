@@ -15,13 +15,13 @@ const Home = () => {
                 <Topbar />
 
                 {/* Main Content */}
-                <div className="home-content p-6" style={{ paddingTop: '3rem', paddingLeft: '16rem' }}>
+                <div className="home-content p-6" style={{ paddingTop: '0', paddingLeft: '16rem' }}>
                     {/* Background Image */}
-                    <div className="relative w-full h-64 bg-cover bg-center" 
-                         style={{ backgroundImage: `url('https://www.midassafety.com/wp-content/uploads/2022/06/Midas-Sustainability-1920x560-b.jpg')` }}>
+                    <div className="relative w-full h-64 bg-cover bg-center overflow-hidden"
+                         style={{ backgroundImage: 'url("https://www.midassafety.com/wp-content/uploads/2022/06/Midas-Sustainability-1920x560-b.jpg")', height: 'auto', minHeight: '300px' }}>
                          
                         {/* Overlay Text */}
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-black">
                             <h1 className="text-5xl font-bold text-white">
                                 Welcome to PROMCO 2.0
                             </h1>

@@ -1,4 +1,3 @@
-// src/Pages/Machine.js
 import React from "react";
 import MachineTable from "../Components/MachineTable";
 import Sidebar from '../Components/Sidebar'; // Import Sidebar
@@ -15,7 +14,15 @@ const Machine = () => {
         <Topbar />
 
         {/* Main Content */}
-        <div className="machine-content p-6" style={{ paddingTop: '3rem', paddingLeft: '16rem' }}>
+        <div 
+          className="machine-content p-6" 
+          style={{ 
+            marginTop: '5rem',  // Spacing below the top bar
+            marginLeft: '16rem' // Spacing to the right of the sidebar (assuming sidebar is 16rem wide)
+          }}
+        >
+                              <h1 className="text-2xl font-bold mb-4">Machine</h1> {/* Header to show the current page */}
+
           <MachineTable />
         </div>
       </div>

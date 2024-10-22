@@ -6,33 +6,18 @@ const UserManage = () => {
     // Initial user data for the logged-in user
     const [userData, setUserData] = useState({
         profilePicture: 'https://via.placeholder.com/150',
-        username: 'JohnDoe',
+        username: 'John Doe',
+        role: 'Full Stack Developer',
+        location: 'Bay Area, San Francisco, CA',
         email: 'john.doe@example.com',
-        telephone: '+1 234 567 890',
-        role: 'Admin',
+        phone: '(239) 816-9029',
+        address: 'Bay Area, San Francisco, CA',
     });
 
-    // Sample data for the user table
-    const [users, setUsers] = useState([
-        {
-            username: 'JaneSmith',
-            email: 'jane.smith@example.com',
-            telephone: '+1 345 678 901',
-            role: 'Operator',
-        },
-        {
-            username: 'MikeJohnson',
-            email: 'mike.johnson@example.com',
-            telephone: '+1 456 789 012',
-            role: 'Admin',
-        },
-        {
-            username: 'SaraLee',
-            email: 'sara.lee@example.com',
-            telephone: '+1 567 890 123',
-            role: 'Operator',
-        },
-    ]);
+    // Toggle edit mode for profile picture
+    const [editPictureMode, setEditPictureMode] = useState(false);
+    // Toggle edit mode for personal details
+    const [editMode, setEditMode] = useState(false);
 
     // Handle profile picture upload
     const handleProfilePictureChange = (e) => {
@@ -40,14 +25,28 @@ const UserManage = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                // Update the profile picture in the state
                 setUserData((prevData) => ({
                     ...prevData,
                     profilePicture: reader.result,
                 }));
             };
-            reader.readAsDataURL(file); // Convert the file to a base64 string
+            reader.readAsDataURL(file);
         }
+    };
+
+    // Handle personal details update
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUserData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    // Save the updated details
+    const handleSaveDetails = () => {
+        setEditMode(false); // Exit edit mode
+        console.log('Updated user data:', userData);
     };
 
     return (
@@ -59,65 +58,128 @@ const UserManage = () => {
                 {/* Topbar */}
                 <Topbar />
 
+
                 {/* Main Content */}
-                <div className="home-content p-6" style={{ paddingTop: '3rem', paddingLeft: '16rem' }}>
-                    {/* User Management Section */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
-                        <div className="p-4 bg-white rounded-lg shadow-md">
-                            <div className="flex items-center gap-4 mb-4">
-                                {/* Profile Picture */}
+                <div className="home-content p-6" style={{ paddingTop: '1rem', paddingLeft: '16rem' }}>
+                <h2 className="text-2xl font-semibold">User Profile</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Left Column: Profile Section */}
+                        <div className="col-span-1 bg-white rounded-lg shadow-md p-4">
+                            <div className="flex flex-col items-center text-center">
                                 <img
                                     src={userData.profilePicture}
                                     alt="User Profile"
-                                    className="w-24 h-24 rounded-full object-cover"
+                                    className="w-24 h-24 rounded-full object-cover mb-4"
                                 />
-                                {/* User Info */}
-                                <div className="text-sm">
-                                    <h3 className="text-lg font-semibold">{userData.username}</h3>
-                                    <p className="text-gray-500">{userData.email}</p>
-                                    <p className="text-gray-500">{userData.telephone}</p>
-                                    <p className="text-gray-500">{userData.role}</p>
-                                </div>
-                            </div>
-                            {/* File Input for Profile Picture Upload */}
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-xs font-bold mb-2">
-                                    Upload Profile Picture:
-                                </label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleProfilePictureChange}
-                                    className="border rounded w-full py-1 px-2 text-gray-700"
-                                />
+                                <h3 className="text-lg font-semibold">{userData.username}</h3>
+                                <p className="text-gray-500">{userData.role}</p>
+                                <p className="text-gray-500">{userData.location}</p>
+
+                                <button
+                                    onClick={() => setEditPictureMode(!editPictureMode)}
+                                    className="mt-2 bg-blue-500 text-white px-3 py-1 rounded">
+                                    {editPictureMode ? 'Cancel' : 'Edit Profile Picture'}
+                                </button>
+
+                                {editPictureMode && (
+                                    <div className="mt-4">
+                                        <label className="block text-gray-700 text-xs font-bold mb-2">
+                                            Upload New Profile Picture:
+                                        </label>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleProfilePictureChange}
+                                            className="border rounded w-full py-1 px-2 text-gray-700"
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        {/* User Table Section */}
-                        <div className="p-6 bg-white rounded-lg shadow-md">
-                            <h2 className="text-2xl font-bold mb-4 text-center">Existing Users</h2>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full table-auto">
-                                    <thead>
-                                        <tr className="bg-gray-200">
-                                            <th className="px-4 py-2 text-left text-gray-600">Username</th>
-                                            <th className="px-4 py-2 text-left text-gray-600">Email</th>
-                                            <th className="px-4 py-2 text-left text-gray-600">Telephone</th>
-                                            <th className="px-4 py-2 text-left text-gray-600">Role</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {users.map((user, index) => (
-                                            <tr key={index} className="bg-white border-b">
-                                                <td className="px-4 py-2">{user.username}</td>
-                                                <td className="px-4 py-2">{user.email}</td>
-                                                <td className="px-4 py-2">{user.telephone}</td>
-                                                <td className="px-4 py-2">{user.role}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                        {/* Right Column: User Details */}
+                        <div className="col-span-2 bg-white rounded-lg shadow-md p-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Full Name */}
+                                <div>
+                                    <label className="block text-gray-700 font-bold">Full Name</label>
+                                    {editMode ? (
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            value={userData.username}
+                                            onChange={handleInputChange}
+                                            className="border rounded w-full py-1 px-2"
+                                        />
+                                    ) : (
+                                        <p>{userData.username}</p>
+                                    )}
+                                </div>
+
+                                {/* Email */}
+                                <div>
+                                    <label className="block text-gray-700 font-bold">Email</label>
+                                    {editMode ? (
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={userData.email}
+                                            onChange={handleInputChange}
+                                            className="border rounded w-full py-1 px-2"
+                                        />
+                                    ) : (
+                                        <p>{userData.email}</p>
+                                    )}
+                                </div>
+
+                                {/* Phone */}
+                                <div>
+                                    <label className="block text-gray-700 font-bold">Phone</label>
+                                    {editMode ? (
+                                        <input
+                                            type="text"
+                                            name="phone"
+                                            value={userData.phone}
+                                            onChange={handleInputChange}
+                                            className="border rounded w-full py-1 px-2"
+                                        />
+                                    ) : (
+                                        <p>{userData.phone}</p>
+                                    )}
+                                </div>
+
+                                {/* Address */}
+                                <div className="col-span-2">
+                                    <label className="block text-gray-700 font-bold">Address</label>
+                                    {editMode ? (
+                                        <input
+                                            type="text"
+                                            name="address"
+                                            value={userData.address}
+                                            onChange={handleInputChange}
+                                            className="border rounded w-full py-1 px-2"
+                                        />
+                                    ) : (
+                                        <p>{userData.address}</p>
+                                    )}
+                                </div>
                             </div>
+
+                            {/* Edit/Save Button */}
+                            {editMode ? (
+                                <button
+                                    onClick={handleSaveDetails}
+                                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
+                                    Save
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => setEditMode(true)}
+                                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                                    Edit
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -127,4 +189,3 @@ const UserManage = () => {
 };
 
 export default UserManage;
-
