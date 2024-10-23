@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button, IconButton, Box } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { styled } from '@mui/material/styles';
+
+// Create a styled TableCell for the header
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main, // Change to your desired color
+  color: theme.palette.common.white, // Text color
+  fontWeight: 'bold',
+}));
 
 const ParameterQualityTable = () => {
   const [parameters, setParameters] = useState([]); // State to store parameter quality data
@@ -12,6 +22,7 @@ const ParameterQualityTable = () => {
     target: "",
     maxValue: ""
   }); // State for new parameter input
+  const [editingParameter, setEditingParameter] = useState(null); // State to track the parameter being edited
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -46,6 +57,32 @@ const ParameterQualityTable = () => {
       ...newParameter
     };
     setParameters([...parameters, newParameterData]);
+    resetNewParameter();
+  };
+
+  // Handle editing a parameter
+  const handleEditParameter = (parameter) => {
+    setEditingParameter(parameter);
+    setNewParameter({ ...parameter });
+  };
+
+  // Handle saving the edited parameter
+  const handleSaveEdit = () => {
+    const updatedParameters = parameters.map(param =>
+      param.id === editingParameter.id ? newParameter : param
+    );
+    setParameters(updatedParameters);
+    resetNewParameter();
+    setEditingParameter(null);
+  };
+
+  // Handle deleting a parameter
+  const handleDeleteParameter = (id) => {
+    setParameters(parameters.filter(param => param.id !== id));
+  };
+
+  // Reset new parameter input
+  const resetNewParameter = () => {
     setNewParameter({
       id: "",
       plannedEpld: "",
@@ -55,6 +92,7 @@ const ParameterQualityTable = () => {
       target: "",
       maxValue: ""
     });
+    setEditingParameter(null);
   };
 
   // Handle page change
@@ -70,7 +108,7 @@ const ParameterQualityTable = () => {
 
   return (
     <div>
-      {/* Form for adding new parameter quality entries */}
+      {/* Form for adding/editing parameter quality entries */}
       <div className="mb-4">
         <TextField
           label="ID"
@@ -124,9 +162,15 @@ const ParameterQualityTable = () => {
           onChange={(e) => setNewParameter({ ...newParameter, maxValue: e.target.value })}
           className="mr-2"
         />
-        <Button variant="contained" color="primary" onClick={handleAddParameter}>
-          Add Parameter Quality
-        </Button>
+        {editingParameter ? (
+          <Button variant="contained" color="primary" onClick={handleSaveEdit}>
+            Save Changes
+          </Button>
+        ) : (
+          <Button variant="contained" color="primary" onClick={handleAddParameter}>
+            Add Parameter Quality
+          </Button>
+        )}
       </div>
 
       {/* Parameter Quality Table */}
@@ -134,18 +178,19 @@ const ParameterQualityTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Planned Epld</TableCell>
-              <TableCell>Material Code</TableCell>
-              <TableCell>Parameter</TableCell>
-              <TableCell>Min Value</TableCell>
-              <TableCell>Target</TableCell>
-              <TableCell>Max Value</TableCell>
+              <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>Planned Epld</StyledTableCell>
+              <StyledTableCell>Material Code</StyledTableCell>
+              <StyledTableCell>Parameter</StyledTableCell>
+              <StyledTableCell>Min Value</StyledTableCell>
+              <StyledTableCell>Target</StyledTableCell>
+              <StyledTableCell>Max Value</StyledTableCell>
+              <StyledTableCell>Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {parameters.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((param, index) => (
-              <TableRow key={index}>
+            {parameters.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((param) => (
+              <TableRow key={param.id}>
                 <TableCell>{param.id}</TableCell>
                 <TableCell>{param.plannedEpld}</TableCell>
                 <TableCell>{param.materialCode}</TableCell>
@@ -153,6 +198,16 @@ const ParameterQualityTable = () => {
                 <TableCell>{param.minValue}</TableCell>
                 <TableCell>{param.target}</TableCell>
                 <TableCell>{param.maxValue}</TableCell>
+                <TableCell>
+                  <Box display="flex" alignItems="center">
+                    <IconButton color="primary" onClick={() => handleEditParameter(param)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="secondary" onClick={() => handleDeleteParameter(param.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,5 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Paper,
+  TextField,
+  Button,
+  IconButton,
+  Box,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { styled } from "@mui/material/styles";
+
+// Create a styled TableCell for the header
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main, // Change to your desired color
+  color: theme.palette.common.white, // Text color
+  fontWeight: "bold",
+}));
 
 const ToleranceTable = () => {
   const [tolerances, setTolerances] = useState([]); // State to store tolerance data
@@ -10,8 +33,9 @@ const ToleranceTable = () => {
     type: "",
     creatorId: "",
     modifierId: "",
-    plannedEpld: ""
+    plannedEpld: "",
   }); // State for new tolerance input
+  const [editingTolerance, setEditingTolerance] = useState(null); // State to track the tolerance being edited
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -19,22 +43,22 @@ const ToleranceTable = () => {
   useEffect(() => {
     const initialData = [
       {
-        id: '1',
+        id: "1",
         hasDeleted: false,
-        name: 'Tolerance A',
-        type: 'Type 1',
-        creatorId: 'User1',
-        modifierId: 'User2',
-        plannedEpld: '2024-12-31'
+        name: "Tolerance A",
+        type: "Type 1",
+        creatorId: "User1",
+        modifierId: "User2",
+        plannedEpld: "2024-12-31",
       },
       {
-        id: '2',
+        id: "2",
         hasDeleted: false,
-        name: 'Tolerance B',
-        type: 'Type 2',
-        creatorId: 'User1',
-        modifierId: 'User3',
-        plannedEpld: '2024-11-30'
+        name: "Tolerance B",
+        type: "Type 2",
+        creatorId: "User1",
+        modifierId: "User3",
+        plannedEpld: "2024-11-30",
       },
     ];
     setTolerances(initialData);
@@ -44,6 +68,32 @@ const ToleranceTable = () => {
   const handleAddTolerance = () => {
     const newToleranceData = { ...newTolerance };
     setTolerances([...tolerances, newToleranceData]);
+    resetNewTolerance();
+  };
+
+  // Handle editing a tolerance
+  const handleEditTolerance = (tolerance) => {
+    setEditingTolerance(tolerance);
+    setNewTolerance({ ...tolerance });
+  };
+
+  // Handle saving the edited tolerance
+  const handleSaveEdit = () => {
+    const updatedTolerances = tolerances.map((tolerance) =>
+      tolerance.id === editingTolerance.id ? { ...newTolerance } : tolerance
+    );
+    setTolerances(updatedTolerances);
+    resetNewTolerance();
+    setEditingTolerance(null);
+  };
+
+  // Handle deleting a tolerance
+  const handleDeleteTolerance = (id) => {
+    setTolerances(tolerances.filter((tolerance) => tolerance.id !== id));
+  };
+
+  // Reset new tolerance input
+  const resetNewTolerance = () => {
     setNewTolerance({
       id: "",
       hasDeleted: false,
@@ -51,7 +101,7 @@ const ToleranceTable = () => {
       type: "",
       creatorId: "",
       modifierId: "",
-      plannedEpld: ""
+      plannedEpld: "",
     });
   };
 
@@ -68,7 +118,7 @@ const ToleranceTable = () => {
 
   return (
     <div>
-      {/* Form for adding new tolerances */}
+      {/* Form for adding/editing tolerances */}
       <div className="mb-4">
         <TextField
           label="ID"
@@ -119,9 +169,15 @@ const ToleranceTable = () => {
           onChange={(e) => setNewTolerance({ ...newTolerance, hasDeleted: e.target.checked })}
           className="mr-2"
         />
-        <Button variant="contained" color="primary" onClick={handleAddTolerance}>
-          Add Tolerance
-        </Button>
+        {editingTolerance ? (
+          <Button variant="contained" color="primary" onClick={handleSaveEdit}>
+            Save Changes
+          </Button>
+        ) : (
+          <Button variant="contained" color="primary" onClick={handleAddTolerance}>
+            Add Tolerance
+          </Button>
+        )}
       </div>
 
       {/* Tolerance Table */}
@@ -129,13 +185,14 @@ const ToleranceTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Has Deleted</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Creator ID</TableCell>
-              <TableCell>Modifier ID</TableCell>
-              <TableCell>Planned Epld</TableCell>
+              <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>Has Deleted</StyledTableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Type</StyledTableCell>
+              <StyledTableCell>Creator ID</StyledTableCell>
+              <StyledTableCell>Modifier ID</StyledTableCell>
+              <StyledTableCell>Planned Epld</StyledTableCell>
+              <StyledTableCell>Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -148,6 +205,16 @@ const ToleranceTable = () => {
                 <TableCell>{tolerance.creatorId}</TableCell>
                 <TableCell>{tolerance.modifierId}</TableCell>
                 <TableCell>{tolerance.plannedEpld}</TableCell>
+                <TableCell>
+                  <Box display="flex" alignItems="center">
+                    <IconButton color="secondary" onClick={() => handleDeleteTolerance(tolerance.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton color="primary" onClick={() => handleEditTolerance(tolerance)}>
+                      <EditIcon />
+                    </IconButton>
+                  </Box>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

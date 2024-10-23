@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button, IconButton, Box } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { styled } from '@mui/material/styles';
+
+// Create a styled TableCell for the header
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main, // Change to your desired color
+  color: theme.palette.common.white, // Text color
+  fontWeight: 'bold',
+}));
 
 const SectionTable = () => {
   const [sections, setSections] = useState([]); // State to store section data
@@ -21,6 +31,7 @@ const SectionTable = () => {
     isDynamic: false,
     equation: ""
   }); // State for new section input
+  const [editingSection, setEditingSection] = useState(null); // State to track the section being edited
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -75,6 +86,32 @@ const SectionTable = () => {
       modifiedTime: new Date().toISOString() // Set modified time
     };
     setSections([...sections, newSectionData]);
+    resetNewSection();
+  };
+
+  // Handle editing a section
+  const handleEditSection = (section) => {
+    setEditingSection(section);
+    setNewSection({ ...section });
+  };
+
+  // Handle saving the edited section
+  const handleSaveEdit = () => {
+    const updatedSections = sections.map(section =>
+      section.id === editingSection.id ? { ...newSection, modifiedTime: new Date().toISOString() } : section
+    );
+    setSections(updatedSections);
+    resetNewSection();
+    setEditingSection(null);
+  };
+
+  // Handle deleting a section
+  const handleDeleteSection = (id) => {
+    setSections(sections.filter(section => section.id !== id));
+  };
+
+  // Reset new section input
+  const resetNewSection = () => {
     setNewSection({
       id: "",
       mainSection: "",
@@ -108,7 +145,7 @@ const SectionTable = () => {
 
   return (
     <div>
-      {/* Form for adding new sections */}
+      {/* Form for adding/editing sections */}
       <div className="mb-4">
         <TextField
           label="ID"
@@ -203,9 +240,15 @@ const SectionTable = () => {
           onChange={(e) => setNewSection({ ...newSection, equation: e.target.value })}
           className="mr-2"
         />
-        <Button variant="contained" color="primary" onClick={handleAddSection}>
-          Add Section
-        </Button>
+        {editingSection ? (
+          <Button variant="contained" color="primary" onClick={handleSaveEdit}>
+            Save Changes
+          </Button>
+        ) : (
+          <Button variant="contained" color="primary" onClick={handleAddSection}>
+            Add Section
+          </Button>
+        )}
       </div>
 
       {/* Section Table */}
@@ -213,43 +256,36 @@ const SectionTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Main Section</TableCell>
-              <TableCell>Sub Section</TableCell>
-              <TableCell>Machine Type</TableCell>
-              <TableCell>Parameter Toleranced</TableCell>
-              <TableCell>Threshold</TableCell>
-              <TableCell>Has Deleted</TableCell>
-              <TableCell>Creator ID</TableCell>
-              <TableCell>Modifier ID</TableCell>
-              <TableCell>Created Time</TableCell>
-              <TableCell>Modified Time</TableCell>
-              <TableCell>Planned Epld</TableCell>
-              <TableCell>Parameter Short Name</TableCell>
-              <TableCell>Sort Number</TableCell>
-              <TableCell>Is Dynamic</TableCell>
-              <TableCell>Equation</TableCell>
+              <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>Main Section</StyledTableCell>
+              <StyledTableCell>Sub Section</StyledTableCell>
+              <StyledTableCell>Machine Type</StyledTableCell>
+              <StyledTableCell>Parameter Toleranced</StyledTableCell>
+              <StyledTableCell>Threshold</StyledTableCell>
+              <StyledTableCell>Creator ID</StyledTableCell>
+              <StyledTableCell>Modifier ID</StyledTableCell>
+              <StyledTableCell>Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {sections.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((section, index) => (
-              <TableRow key={index}>
+            {sections.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((section) => (
+              <TableRow key={section.id}>
                 <TableCell>{section.id}</TableCell>
                 <TableCell>{section.mainSection}</TableCell>
                 <TableCell>{section.subSection}</TableCell>
                 <TableCell>{section.machineType}</TableCell>
                 <TableCell>{section.parameterToleranced}</TableCell>
                 <TableCell>{section.threshold}</TableCell>
-                <TableCell>{section.hasDeleted ? "Yes" : "No"}</TableCell>
                 <TableCell>{section.creatorId}</TableCell>
                 <TableCell>{section.modifierId}</TableCell>
-                <TableCell>{new Date(section.createdTime).toLocaleString()}</TableCell>
-                <TableCell>{new Date(section.modifiedTime).toLocaleString()}</TableCell>
-                <TableCell>{section.plannedEpld}</TableCell>
-                <TableCell>{section.parameterShortName}</TableCell>
-                <TableCell>{section.sortNumber}</TableCell>
-                <TableCell>{section.isDynamic ? "Yes" : "No"}</TableCell>
-                <TableCell>{section.equation}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleEditSection(section)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleDeleteSection(section.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

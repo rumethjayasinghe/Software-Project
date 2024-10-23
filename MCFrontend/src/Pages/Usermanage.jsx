@@ -1,187 +1,184 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing eye icons
 import Sidebar from '../Components/Sidebar'; // Import Sidebar
 import Topbar from '../Components/Topbar'; // Import Topbar
 
 const UserManage = () => {
-    // Initial user data for the logged-in user
-    const [userData, setUserData] = useState({
-        profilePicture: 'https://via.placeholder.com/150',
-        username: 'John Doe',
-        role: 'Full Stack Developer',
-        location: 'Bay Area, San Francisco, CA',
-        email: 'john.doe@example.com',
-        phone: '(239) 816-9029',
-        address: 'Bay Area, San Francisco, CA',
+    const [user, setUser] = useState({ name: "", email: "", role: "" });
+    const [users, setUsers] = useState({
+        "admin@example.com": { name: "John Doe", email: "admin@example.com", password: "admin123", role: "admin" },
+        "operator@example.com": { name: "Sam Peter", email: "operator@example.com", password: "operator123", role: "operator" },
+        "newadmin@example.com": { name: "Jane Smith", email: "newadmin@example.com", password: "newadmin123", role: "admin" },
+        "operator2@example.com": { name: "Emily Brown", email: "operator2@example.com", password: "operator456", role: "operator" },
+        "operator3@example.com": { name: "Michael Johnson", email: "operator3@example.com", password: "operator789", role: "operator" }
     });
 
-    // Toggle edit mode for profile picture
-    const [editPictureMode, setEditPictureMode] = useState(false);
-    // Toggle edit mode for personal details
-    const [editMode, setEditMode] = useState(false);
+    const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'operator' });
+    const [showAddUserForm, setShowAddUserForm] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false); // Track password visibility
 
-    // Handle profile picture upload
-    const handleProfilePictureChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setUserData((prevData) => ({
-                    ...prevData,
-                    profilePicture: reader.result,
-                }));
-            };
-            reader.readAsDataURL(file);
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewUser((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleAddUser = () => {
+        if (newUser.name && newUser.email && newUser.password) {
+            setUsers((prev) => ({
+                ...prev,
+                [newUser.email]: {
+                    name: newUser.name,
+                    email: newUser.email,
+                    password: newUser.password,
+                    role: newUser.role
+                }
+            }));
+            setNewUser({ name: '', email: '', password: '', role: 'operator' });
+            setShowAddUserForm(false);
         }
     };
 
-    // Handle personal details update
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setUserData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value.toLowerCase());
     };
 
-    // Save the updated details
-    const handleSaveDetails = () => {
-        setEditMode(false); // Exit edit mode
-        console.log('Updated user data:', userData);
-    };
+    const filteredUsers = Object.keys(users).filter((email) => 
+        users[email].name.toLowerCase().includes(searchQuery) ||
+        users[email].email.toLowerCase().includes(searchQuery)
+    );
 
     return (
         <div className="flex">
-            {/* Sidebar */}
             <Sidebar />
 
             <div className="flex-grow">
-                {/* Topbar */}
                 <Topbar />
 
-
-                {/* Main Content */}
                 <div className="home-content p-6" style={{ paddingTop: '1rem', paddingLeft: '16rem' }}>
-                <h2 className="text-2xl font-semibold">User Profile</h2>
+                    <h2 className="text-2xl font-semibold">User Management</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Left Column: Profile Section */}
-                        <div className="col-span-1 bg-white rounded-lg shadow-md p-4">
-                            <div className="flex flex-col items-center text-center">
-                                <img
-                                    src={userData.profilePicture}
-                                    alt="User Profile"
-                                    className="w-24 h-24 rounded-full object-cover mb-4"
-                                />
-                                <h3 className="text-lg font-semibold">{userData.username}</h3>
-                                <p className="text-gray-500">{userData.role}</p>
-                                <p className="text-gray-500">{userData.location}</p>
+                    {/* Search Bar */}
+                    <div className="mt-4 flex justify-between items-center">
+                        <h3 className="text-lg font-semibold text-center flex-grow">Existing Users</h3>
+                        <input
+                            type="text"
+                            placeholder="Search users by name or email"
+                            value={searchQuery}
+                            onChange={handleSearch}
+                            className="border rounded px-4 py-2 w-64"
+                        />
+                    </div>
 
-                                <button
-                                    onClick={() => setEditPictureMode(!editPictureMode)}
-                                    className="mt-2 bg-blue-500 text-white px-3 py-1 rounded">
-                                    {editPictureMode ? 'Cancel' : 'Edit Profile Picture'}
-                                </button>
-
-                                {editPictureMode && (
-                                    <div className="mt-4">
-                                        <label className="block text-gray-700 text-xs font-bold mb-2">
-                                            Upload New Profile Picture:
-                                        </label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleProfilePictureChange}
-                                            className="border rounded w-full py-1 px-2 text-gray-700"
-                                        />
-                                    </div>
+                    {/* Existing Users Table */}
+                    <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                        <table className="w-full mt-4 border-collapse border border-gray-300">
+                            <thead>
+                                <tr>
+                                    <th className="border border-gray-300 px-4 py-2">Name</th>
+                                    <th className="border border-gray-300 px-4 py-2">Email</th>
+                                    <th className="border border-gray-300 px-4 py-2 flex items-center">
+                                        Password
+                                        <button onClick={() => setPasswordVisible(!passwordVisible)} className="ml-2">
+                                            {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                                        </button>
+                                    </th>
+                                    <th className="border border-gray-300 px-4 py-2">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredUsers.length > 0 ? (
+                                    filteredUsers.map((email) => (
+                                        <tr key={email}>
+                                            <td className="border border-gray-300 px-4 py-2">{users[email].name}</td>
+                                            <td className="border border-gray-300 px-4 py-2">{users[email].email}</td>
+                                            <td className="border border-gray-300 px-4 py-2">
+                                                {passwordVisible ? users[email].password : '••••••'}
+                                            </td>
+                                            <td className="border border-gray-300 px-4 py-2">{users[email].role}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="border border-gray-300 px-4 py-2 text-center">
+                                            No users found
+                                        </td>
+                                    </tr>
                                 )}
-                            </div>
-                        </div>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        {/* Right Column: User Details */}
-                        <div className="col-span-2 bg-white rounded-lg shadow-md p-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Full Name */}
-                                <div>
-                                    <label className="block text-gray-700 font-bold">Full Name</label>
-                                    {editMode ? (
-                                        <input
-                                            type="text"
-                                            name="username"
-                                            value={userData.username}
-                                            onChange={handleInputChange}
-                                            className="border rounded w-full py-1 px-2"
-                                        />
-                                    ) : (
-                                        <p>{userData.username}</p>
-                                    )}
+                    {/* Add User Form - Visible to Admins */}
+                    {user.role === 'admin' && (
+                        <div className="mt-6">
+                            <button
+                                onClick={() => setShowAddUserForm(!showAddUserForm)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded">
+                                {showAddUserForm ? 'Cancel' : 'Add User'}
+                            </button>
+
+                            {showAddUserForm && (
+                                <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                                    <h3 className="text-lg font-semibold">Add New User</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-gray-700 font-bold">Full Name</label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={newUser.name}
+                                                onChange={handleInputChange}
+                                                className="border rounded w-full py-1 px-2"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 font-bold">Email</label>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={newUser.email}
+                                                onChange={handleInputChange}
+                                                className="border rounded w-full py-1 px-2"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 font-bold">Password</label>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                value={newUser.password}
+                                                onChange={handleInputChange}
+                                                className="border rounded w-full py-1 px-2"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 font-bold">Role</label>
+                                            <select
+                                                name="role"
+                                                value={newUser.role}
+                                                onChange={handleInputChange}
+                                                className="border rounded w-full py-1 px-2">
+                                                <option value="operator">Operator</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleAddUser}
+                                        className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
+                                        Add User
+                                    </button>
                                 </div>
-
-                                {/* Email */}
-                                <div>
-                                    <label className="block text-gray-700 font-bold">Email</label>
-                                    {editMode ? (
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={userData.email}
-                                            onChange={handleInputChange}
-                                            className="border rounded w-full py-1 px-2"
-                                        />
-                                    ) : (
-                                        <p>{userData.email}</p>
-                                    )}
-                                </div>
-
-                                {/* Phone */}
-                                <div>
-                                    <label className="block text-gray-700 font-bold">Phone</label>
-                                    {editMode ? (
-                                        <input
-                                            type="text"
-                                            name="phone"
-                                            value={userData.phone}
-                                            onChange={handleInputChange}
-                                            className="border rounded w-full py-1 px-2"
-                                        />
-                                    ) : (
-                                        <p>{userData.phone}</p>
-                                    )}
-                                </div>
-
-                                {/* Address */}
-                                <div className="col-span-2">
-                                    <label className="block text-gray-700 font-bold">Address</label>
-                                    {editMode ? (
-                                        <input
-                                            type="text"
-                                            name="address"
-                                            value={userData.address}
-                                            onChange={handleInputChange}
-                                            className="border rounded w-full py-1 px-2"
-                                        />
-                                    ) : (
-                                        <p>{userData.address}</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Edit/Save Button */}
-                            {editMode ? (
-                                <button
-                                    onClick={handleSaveDetails}
-                                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
-                                    Save
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={() => setEditMode(true)}
-                                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                                    Edit
-                                </button>
                             )}
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

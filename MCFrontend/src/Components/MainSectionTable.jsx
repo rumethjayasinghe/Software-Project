@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Button, IconButton, Box } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { styled } from '@mui/material/styles';
 
-const MainSectionTable= () => {
+// Create a styled TableCell for the header
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main, // Change to your desired color
+  color: theme.palette.common.white, // Text color
+  fontWeight: 'bold',
+}));
+
+const MainSectionTable = () => {
   const [sections, setSections] = useState([]); // State to store section data
   const [newSection, setNewSection] = useState({
     mainSection: "",
@@ -11,6 +21,7 @@ const MainSectionTable= () => {
     modifiedTime: "",
     plannedEpld: ""
   }); // State for new section input
+  const [editingSection, setEditingSection] = useState(null); // State to track the section being edited
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -41,10 +52,36 @@ const MainSectionTable= () => {
   const handleAddSection = () => {
     const newSectionData = {
       ...newSection,
-      createdTime: new Date().toISOString(), // Set created time
-      modifiedTime: new Date().toISOString() // Set modified time
+      createdTime: new Date().toISOString(),
+      modifiedTime: new Date().toISOString()
     };
     setSections([...sections, newSectionData]);
+    resetNewSection();
+  };
+
+  // Handle editing a section
+  const handleEditSection = (section) => {
+    setEditingSection(section);
+    setNewSection({ ...section });
+  };
+
+  // Handle saving the edited section
+  const handleSaveEdit = () => {
+    const updatedSections = sections.map(section =>
+      section.mainSection === editingSection.mainSection ? { ...newSection, modifiedTime: new Date().toISOString() } : section
+    );
+    setSections(updatedSections);
+    resetNewSection();
+    setEditingSection(null);
+  };
+
+  // Handle deleting a section
+  const handleDeleteSection = (mainSection) => {
+    setSections(sections.filter(section => section.mainSection !== mainSection));
+  };
+
+  // Reset new section input
+  const resetNewSection = () => {
     setNewSection({
       mainSection: "",
       mainSectionName: "",
@@ -54,20 +91,6 @@ const MainSectionTable= () => {
       plannedEpld: ""
     });
   };
-
-  // Auto-update data every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSections(prevSections => {
-        return prevSections.map(section => ({
-          ...section,
-          modifiedTime: new Date().toISOString() // Update modified time to current time
-        }));
-      });
-    }, 5000); // Update every 5 seconds
-
-    return () => clearInterval(interval); // Clear interval on component unmount
-  }, []);
 
   // Handle page change
   const handleChangePage = (event, newPage) => {
@@ -82,7 +105,7 @@ const MainSectionTable= () => {
 
   return (
     <div>
-      {/* Form for adding new sections */}
+      {/* Form for adding/editing sections */}
       <div className="mb-4">
         <TextField
           label="Main Section"
@@ -112,9 +135,15 @@ const MainSectionTable= () => {
           onChange={(e) => setNewSection({ ...newSection, plannedEpld: e.target.value })}
           className="mr-2"
         />
-        <Button variant="contained" color="primary" onClick={handleAddSection}>
-          Add Section
-        </Button>
+        {editingSection ? (
+          <Button variant="contained" color="primary" onClick={handleSaveEdit}>
+            Save Changes
+          </Button>
+        ) : (
+          <Button variant="contained" color="primary" onClick={handleAddSection}>
+            Add Section
+          </Button>
+        )}
       </div>
 
       {/* Main Section Table */}
@@ -122,12 +151,13 @@ const MainSectionTable= () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Main Section</TableCell>
-              <TableCell>Main Section Name</TableCell>
-              <TableCell>Has Deleted</TableCell>
-              <TableCell>Created Time</TableCell>
-              <TableCell>Modified Time</TableCell>
-              <TableCell>Planned Epld</TableCell>
+              <StyledTableCell>Main Section</StyledTableCell>
+              <StyledTableCell>Main Section Name</StyledTableCell>
+              <StyledTableCell>Has Deleted</StyledTableCell>
+              <StyledTableCell>Created Time</StyledTableCell>
+              <StyledTableCell>Modified Time</StyledTableCell>
+              <StyledTableCell>Planned Epld</StyledTableCell>
+              <StyledTableCell>Actions</StyledTableCell> {/* Actions column for edit and delete */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -139,6 +169,22 @@ const MainSectionTable= () => {
                 <TableCell>{section.createdTime}</TableCell>
                 <TableCell>{section.modifiedTime}</TableCell>
                 <TableCell>{section.plannedEpld}</TableCell>
+                <TableCell>
+                  <Box display="flex" alignItems="center">
+                    <IconButton 
+                      color="secondary" 
+                      onClick={() => handleDeleteSection(section.mainSection)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton 
+                      color="primary" 
+                      onClick={() => handleEditSection(section)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Box>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

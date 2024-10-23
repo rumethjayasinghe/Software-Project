@@ -16,6 +16,7 @@ import UserManage from "./Pages/Usermanage";
 import Login from "./Pages/Login";
 import AdminLogin from "./Pages/AdminDash";
 import AdminDash from "./Pages/AdminDash";
+import Profile from "./Pages/Profile";
 
 const App = () => {
   // Get the current route
@@ -51,6 +52,8 @@ const App = () => {
           <Route path="/section-template" element={<SectionTemplate />} />
           <Route path="/sub-section" element={<SubSection />} />
           <Route path="/tolerance" element={<Tolerance />} />
+          <Route path="/Profile" element={<Profile />} />
+
         </Routes>
       </div>
     </div>

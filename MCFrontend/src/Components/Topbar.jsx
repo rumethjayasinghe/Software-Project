@@ -26,7 +26,7 @@ const Topbar = ({ show }) => {
   };
 
   const handleProfileClick = () => {
-    navigate('/Usermanage');
+    navigate('/Profile');
     handleMenuClose();
   };
 
